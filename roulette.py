@@ -1,5 +1,5 @@
-from itertools import islice, izip_longest, repeat, tee
-from random import choice, uniform
+from itertools import cycle, islice, izip_longest, repeat, tee
+from random import choice, shuffle, uniform
 import PIL
 
 from images2gif import writeGif
@@ -26,6 +26,11 @@ def pairwise_unique(iterable):
             yield a
 
 def pairwise_unique_rand_seq(choices, n):
+    assert len(choices) > 1
+    if len(choices) == 2:
+        shuffled = list(choices)
+        shuffled.shuffle()
+        return islice(cycle(shuffled), n)
     random_seq = (choice(choices) for _ in repeat(None))
     return islice(pairwise_unique(random_seq), n)
 

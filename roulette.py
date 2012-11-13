@@ -1,3 +1,4 @@
+from itertools import islice, izip_longest, repeat, tee
 from random import choice, uniform
 import PIL
 
@@ -17,8 +18,16 @@ EMOTE_CACHE = {}
 WORD_CACHE = {}
 
 
-def rand_seq(choices, n):
-    return [choice(choices) for _ in xrange(n)]
+def pairwise_unique(iterable):
+    iter_a, iter_b = tee(iterable)
+    iter_b.next()
+    for a, b in izip_longest(iter_a, iter_b):
+        if a != b:
+            yield a
+
+def pairwise_unique_rand_seq(choices, n):
+    random_seq = (choice(choices) for _ in repeat(None))
+    return islice(pairwise_unique(random_seq), n)
 
 def test_roulette():
     from glob import glob
@@ -32,7 +41,7 @@ def word_roulette(tokens):
     return _generic_roulette(tokens, get_word_image)
 
 def _generic_roulette(tokens, get_image_fn):
-    roulette_seq = rand_seq(tokens, ROULETTE_ITEMS)
+    roulette_seq = pairwise_unique_rand_seq(tokens, ROULETTE_ITEMS)
     images = [get_image_fn(s) for s in roulette_seq]
     roulette_image = roulettify_images(images)
     return roulette_image

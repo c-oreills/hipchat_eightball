@@ -5,8 +5,8 @@ import PIL
 from images2gif import writeGif
 
 ROULETTE_ITEMS = 40
-ANIMATION_DURATION = 10
-DAMPING_FACTOR = 1.2
+ANIMATION_DURATION = 12
+DAMPING_FACTOR = 1.1
 
 def _calculate_durations(items, damping_factor):
     durations = tuple(reversed([1/(float(DAMPING_FACTOR)**n) for n in xrange(items)]))
